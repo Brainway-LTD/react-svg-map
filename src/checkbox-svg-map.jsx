@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import SVGMap from './svg-map';
+import isEqual from 'lodash.isequal';
 
 class CheckboxSVGMap extends React.Component {
 	constructor(props) {
@@ -27,6 +28,16 @@ class CheckboxSVGMap extends React.Component {
 			const selectedLocations = this.props.selectedLocationIds.map(locationId => svgNode.getElementById(locationId))
 				.filter(location => !!location); // Remove null locations when invalid id
 
+			this.setState({ selectedLocations });
+		}
+	}
+
+	componentDidUpdate({ selectedLocationIds: prevSelectedLocationIds }) {
+		if (!isEqual(prevSelectedLocationIds, this.props.selectedLocationIds)) {
+			const svgNode = ReactDOM.findDOMNode(this);
+			const selectedLocations = this.props.selectedLocationIds.map(
+				(locationId) => svgNode.getElementById(locationId)
+			);
 			this.setState({ selectedLocations });
 		}
 	}
